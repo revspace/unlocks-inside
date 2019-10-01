@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>title</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  </head>
+  <body>
+    <h3>Recente doorduino unlocks</h3>
+
+    <!-- copy/paste below this in a text panel in grafana, see https://grafana.com/docs/features/panels/text/ -->
+    <div id="doorduino-unlocks">Loading...</div>
+    <script>
+      $(function() {
+        $.get("http://10.42.44.156:8000/", function(data) {
+          $("#doorduino-unlocks").html(data);
+        }).fail(function(data) {
+          $("#doorduino-unlocks").html("Recente doorduino unlocks zijn alleen zichtbaar binnen RevSpace.");
+        });
+      });
+    </script>
+    <!-- end copy/paste -->
+    <h5>ok doei</h5>
+  </body>
+</html>
