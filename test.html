@@ -12,7 +12,7 @@
     <div id="unlocks-local">Loading...</div>
     <script>
       var unlocks_local = function() {
-        $.get("http://127.0.0.1:42042/", function(data) {
+        $.get("http://10.42.14.9:42042/", function(data) {
           $("#unlocks-local").html(data);
         }).fail(function(data) {
           $("#unlocks-local").html("Recente doorduino unlocks zijn alleen lokaal binnen RevSpace zichtbaar.");
