@@ -1,14 +1,13 @@
 #!/bin/env python3
 import paho.mqtt.client as mqtt
-import re, datetime, http.server
+import datetime, http.server
 
 unlocks = [""] *10
 
 def on_message(client, obj, msg):
     if "opt-" not in msg.topic:
         unlocks.pop(0)
-        name = re.search(r"/.+/(.+)/", msg.topic).group(1)
-        text = f"<{datetime.datetime.now():%Y-%m-%d %H:%M:%S}> {name} unlocked by {msg.payload.decode()}"
+        text = f"<{datetime.datetime.now():%Y-%m-%d %H:%M:%S}> {(msg.topic.split('/')[2])} unlocked by {msg.payload.decode()}"
         unlocks.append(text)
         print(text)
 
@@ -23,10 +22,12 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 httpd = http.server.HTTPServer(('0.0.0.0', 8000), RequestHandler)
 httpd.timeout = 0.05
 
+sub_topic = "revspace-local/doorduino/+/unlocked"
+
 mqttc = mqtt.Client()
-mqttc.message_callback_add("revspace-local/doorduino/+/unlocked", on_message)
+mqttc.message_callback_add(sub_topic, on_message)
 mqttc.connect("mosquitto.space.revspace.nl")
-mqttc.subscribe("revspace-local/doorduino/+/unlocked")
+mqttc.subscribe(sub_topic)
 
 while True:
     httpd.handle_request()
