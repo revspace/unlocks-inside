@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import paho.mqtt.client, http.server, datetime, sys, html
 
+print("[{:%Y-%m-%d %H:%M:%S.%f}] Starting...".format(datetime.datetime.now()))
+
 unlocks = [""] *20
 
 def on_message(client, obj, msg):
@@ -34,6 +36,8 @@ except ConnectionRefusedError:
     print("MQTT connection refused. Are you inside the RevSpace network?")
     sys.exit(42)
 mqttc.subscribe(sub_topic)
+
+print("[{:%Y-%m-%d %H:%M:%S.%f}] Started".format(datetime.datetime.now()))
 
 try:
     while True:
