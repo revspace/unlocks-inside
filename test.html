@@ -9,12 +9,12 @@
     <h3>Recente doorduino unlocks</h3>
 
     <!-- copy/paste below this in a text panel in grafana, see https://grafana.com/docs/features/panels/text/ -->
-    <div id="unlocks-local">Loading...</div>
+    <div id="unlocks-local" style="font-family: monospace;">Loading...</div>
     <script>
       var unlocks_local = function() {
         $.get("http://10.42.14.9:42042/", function(data) {
           $("#unlocks-local").html(data);
-          $("#unlocks-local").u.parent().scrollTop($("#unlocks-local").height())
+          $("#unlocks-local").parent().scrollTop($("#unlocks-local").height())
         }).fail(function(data) {
           $("#unlocks-local").html("Recente doorduino unlocks zijn alleen lokaal binnen RevSpace zichtbaar.");
         });
