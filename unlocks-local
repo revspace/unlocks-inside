@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import paho.mqtt.client, http.server, datetime, sys, html
 
-unlocks = [""] *10
+unlocks = [""] *20
 
 def on_message(client, obj, msg):
     if "opt-" not in msg.topic:
