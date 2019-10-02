@@ -6,7 +6,7 @@ unlocks = [""] *10
 def on_message(client, obj, msg):
     if "opt-" not in msg.topic:
         unlocks.pop(0)
-        text = f"<{datetime.datetime.now():%Y-%m-%d %H:%M:%S}> {(msg.topic.split('/')[2])} unlocked by {msg.payload.decode()}"
+        text = "<{:%Y-%m-%d %H:%M:%S}> {} unlocked by {}".format(datetime.datetime.now(), msg.topic.split('/')[2], msg.payload.decode())
         unlocks.append(html.escape(text))
         print(text)
 
@@ -24,7 +24,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 httpd = http.server.HTTPServer(('0.0.0.0', 42042), RequestHandler)
 httpd.timeout = 0.05
 
-sub_topic = "revspace-local-test/doorduino/+/unlocked"
+sub_topic = "revspace-local/doorduino/+/unlocked"
 
 mqttc = paho.mqtt.client.Client()
 mqttc.message_callback_add(sub_topic, on_message)
