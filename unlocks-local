@@ -1,6 +1,5 @@
 #!/bin/env python3
-import paho.mqtt.client as mqtt
-import datetime, http.server
+import paho.mqtt.client, http.server, datetime, sys
 
 unlocks = [""] *10
 
@@ -13,22 +12,32 @@ def on_message(client, obj, msg):
 
 class RequestHandler(http.server.BaseHTTPRequestHandler):
         def do_GET(self):
-            self.send_response(200)
-            self.send_header("Content-type", "text/html; charset=utf-8")
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.end_headers()
-            self.wfile.write("<br />".join(unlocks+[""]).encode())
+            try:
+                self.send_response(200)
+                self.send_header("Content-type", "text/html; charset=utf-8")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write("<br />".join(unlocks+[""]).encode())
+            except BrokenPipeError:
+                print("B0rken pipe. Client disconnected during request processing?")
 
 httpd = http.server.HTTPServer(('0.0.0.0', 8000), RequestHandler)
 httpd.timeout = 0.05
 
 sub_topic = "revspace-local/doorduino/+/unlocked"
 
-mqttc = mqtt.Client()
+mqttc = paho.mqtt.client.Client()
 mqttc.message_callback_add(sub_topic, on_message)
-mqttc.connect("mosquitto.space.revspace.nl")
+try:
+    mqttc.connect("mosquitto.space.revspace.nl")
+except ConnectionRefusedError:
+    print("MQTT connection refused. Are you inside the RevSpace network?")
+    sys.exit(42)
 mqttc.subscribe(sub_topic)
 
-while True:
-    httpd.handle_request()
-    mqttc.loop(timeout=0.05)
+try:
+    while True:
+        httpd.handle_request()
+        mqttc.loop(timeout=0.05)
+except KeyboardInterrupt:
+    print("Bye!")
