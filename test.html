@@ -11,7 +11,7 @@
     <!-- copy/paste below this in a text panel in grafana, see https://grafana.com/docs/features/panels/text/ -->
     <div id="unlocks-local">Loading...</div>
     <script>
-      var unlocks-local = function() {
+      var unlocks_local = function() {
         $.get("http://127.0.0.1:42042/", function(data) {
           $("#unlocks-local").html(data);
         }).fail(function(data) {
@@ -20,8 +20,8 @@
       };
 
       $(function() {
-        unlocks-local();
-        setInterval(unlocks-local, 1000);
+        unlocks_local();
+        setInterval(unlocks_local, 1000);
       });
     </script>
     <!-- end copy/paste -->
