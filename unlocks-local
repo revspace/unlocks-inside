@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
-import paho.mqtt.client, http.server, datetime, sys, html
+import paho.mqtt.client, http.server, datetime, sys, json
 
 print("[{:%Y-%m-%d %H:%M:%S.%f}] Starting...".format(datetime.datetime.now()))
 
-unlocks = [""] *20
+unlocks = [""] *50
 
 def on_message(client, obj, msg):
     if "opt-" not in msg.topic:
         unlocks.pop(0)
-        text = "<{:%Y-%m-%d %H:%M:%S}> {} unlocked by {}".format(datetime.datetime.now(), msg.topic.split('/')[2], msg.payload.decode())
-        unlocks.append(html.escape(text))
+        text = "{:%H:%M:%S} {} unlocked by {}".format(datetime.datetime.now(), msg.topic.split('/')[2], msg.payload.decode())
+        unlocks.append(text)
         print(text)
 
 class RequestHandler(http.server.BaseHTTPRequestHandler):
         def do_GET(self):
             try:
                 self.send_response(200)
-                self.send_header("Content-type", "text/html; charset=utf-8")
+                self.send_header("Content-type", "application/json")
                 self.send_header("Access-Control-Allow-Origin", "*")
                 self.end_headers()
-                self.wfile.write("<br />".join(unlocks+[""]).encode())
+                self.wfile.write(json.dumps(unlocks).encode())
             except BrokenPipeError:
                 print("B0rken pipe. Client disconnected during request processing?")
 

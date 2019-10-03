@@ -2,21 +2,42 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>title</title>
+    <title>[test] unlocks-local</title>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <style>
+      #outer {
+        height: 300px;
+        width: 500px;
+        border: 1px dashed red;
+        overflow: auto;
+      }
+    </style>
   </head>
   <body>
     <h3>Recente doorduino unlocks</h3>
+    <div id="outer">
 
     <!-- copy/paste below this in a text panel in grafana, see https://grafana.com/docs/features/panels/text/ -->
-    <div id="unlocks-local" style="font-family: monospace;">Loading...</div>
+    <div id="unlocks-local" style="font-size: 85%; column-count: 2;">Loading...</div>
     <script>
       var unlocks_local = function() {
-        $.get("http://10.42.14.9:42042/", function(data) {
-          $("#unlocks-local").html(data);
-          $("#unlocks-local").parent().scrollTop($("#unlocks-local").height())
+        $.getJSON("http://10.42.14.9:42042/", function(data) {
+          var div = $("#unlocks-local");
+          div.empty();
+          for(const unlock of data) {
+            div.append(document.createTextNode(unlock));
+            div.append("<br>");
+          }
+          while(div.height() > div.parent().height()) {
+            div[0].childNodes[0].remove();
+          }
         }).fail(function(data) {
-          $("#unlocks-local").html("Recente doorduino unlocks zijn alleen lokaal binnen RevSpace zichtbaar.");
+          $("#unlocks-local").html(
+            "<p>Recente doorduino unlocks zijn alleen lokaal binnen RevSpace zichtbaar.</p>"+
+            "<p>Ben je nu verbonden met het RevSpace netwerk? Het kan nodig zijn om \"onveilige "+
+            "scripts\" of \"mixed content\" toe te staan in je browser</p>"+
+            "<img src=\"https://i.imgur.com/RhGyAX9.png\">"
+            );
         });
       };
 
@@ -27,6 +48,7 @@
     </script>
     <!-- end copy/paste -->
 
+    </div>
     <h5>ok doei</h5>
   </body>
 </html>
