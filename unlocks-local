@@ -3,14 +3,15 @@ import paho.mqtt.client, http.server, datetime, sys, json
 
 print("[{:%Y-%m-%d %H:%M:%S.%f}] Starting...".format(datetime.datetime.now()))
 
-unlocks = [""] *50
+unlocks = []
 
 def on_message(client, obj, msg):
     if "opt-" not in msg.topic:
-        unlocks.pop(0)
-        text = "{:%H:%M:%S} {} unlocked by {}".format(datetime.datetime.now(), msg.topic.split('/')[2], msg.payload.decode())
-        unlocks.append(text)
-        print(text)
+        u = {'ts': datetime.datetime.now().timestamp(), 'door': msg.topic.split('/')[2], 'name': msg.payload.decode()}
+        unlocks.append(u)
+        print(u)
+        if len(unlocks) > 50:
+            unlocks.pop(0)
 
 class RequestHandler(http.server.BaseHTTPRequestHandler):
         def do_GET(self):

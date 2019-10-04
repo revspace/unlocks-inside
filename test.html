@@ -25,8 +25,8 @@
           var div = $("#unlocks-local");
           div.empty();
           for(const unlock of data) {
-            div.append(document.createTextNode(unlock));
-            div.append("<br>");
+            var t = new Date(unlock.ts*1000).toLocaleTimeString();
+            div.append("<div><span style='color: #ccc'>"+t+"</span> <strong>"+unlock.door+"</strong> unlocked by <strong>"+unlock.name+"</strong></div>");
           }
           while(div.height() > div.parent().height()) {
             div[0].childNodes[0].remove();
