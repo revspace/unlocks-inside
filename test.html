@@ -5,11 +5,21 @@
     <title>[test] unlocks-local</title>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <style>
+      body {
+        margin: 0;
+        padding: 0;
+        color: #d8d9da;
+        font-size: 13px;
+        background-color: #161719;
+        font-family: Roboto,Helvetica Neue,Arial,sans-serif;
+      }
       #outer {
-        height: 300px;
-        width: 500px;
-        border: 1px dashed red;
+        margin: 1em;
+        width: 524px;
+        height: 288px;
         overflow: auto;
+        line-height: 1.5;
+        border: 1px dashed red;
       }
     </style>
   </head>
@@ -26,7 +36,14 @@
           div.empty();
           for(const unlock of data) {
             var t = new Date(unlock.ts*1000).toLocaleTimeString();
-            div.append("<div><span style='color: #ccc'>"+t+"</span> <strong>"+unlock.door+"</strong> unlocked by <strong>"+unlock.name+"</strong></div>");
+            div.append(
+              "<div><span style='color: #999'>"+t+"</span> "+
+              "<strong>"+unlock.door+"</strong> "+
+              "<span style='color: #999'>unlocked by</span> "+
+              "<strong>"+unlock.name+"</strong></div>");
+          }
+          while(div.height() < div.parent().height()) {
+            div.prepend("<br>");
           }
           while(div.height() > div.parent().height()) {
             div[0].childNodes[0].remove();
