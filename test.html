@@ -15,8 +15,8 @@
       }
       #outer {
         margin: 1em;
-        width: 524px;
-        height: 288px;
+        width: 454px;
+        height: 303px;
         overflow: auto;
         line-height: 1.5;
         border: 1px dashed red;
@@ -28,12 +28,13 @@
     <div id="outer">
 
     <!-- copy/paste below this in a text panel in grafana, see https://grafana.com/docs/features/panels/text/ -->
-    <div id="unlocks-local" style="font-size: 85%; column-count: 2;">Loading...</div>
+    <div id="unlocks-local" style="font-size: 85%;">Loading...</div>
     <script>
       var unlocks_local = function() {
         $.getJSON("http://10.42.14.9:42042/", function(data) {
           var div = $("#unlocks-local");
           div.empty();
+          div.css('column-count', 2);
           for(const unlock of data) {
             var t = new Date(unlock.ts*1000).toLocaleTimeString();
             div.append(
