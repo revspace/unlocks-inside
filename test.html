@@ -36,13 +36,12 @@
           div.empty();
           div.css('column-count', 2);
           for(const unlock of data) {
-            div.append($("<div>")
-              .append($("<span style='color: #999'>").text(new Date(unlock.ts*1000).toLocaleTimeString()))
-              .append(" ")
-              .append($("<strong>").text(unlock.door))
-              .append($("<span style='color: #999'>").text(" unlocked by "))
-              .append($("<strong>").text(unlock.name))
-            );
+            var t = new Date(unlock.ts*1000).toLocaleTimeString();
+            div.append(
+              "<div><span style='color: #999'>"+t+"</span> "+
+              "<strong>"+unlock.door+"</strong> "+
+              "<span style='color: #999'>unlocked by</span> "+
+              "<strong>"+unlock.name+"</strong></div>");
           }
           while(div.height() < div.parent().height()) {
             div.prepend("<br>");
